@@ -8,6 +8,7 @@ package com.innovworks.threadlearning;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.lang.Thread.State;
 
 /**
  *
@@ -28,9 +29,19 @@ public class Calculator implements Runnable {
         }
     }
 
+    private static void writeThreadInfo(PrintWriter pw, Thread thread, State state) {
+        pw.printf("Main : Id %d - %s\n", thread.getId(), thread.getName());
+        pw.printf("Main : Priority: %d\n", thread.getPriority());
+        pw.printf("Main : Old State: %s\n", state);
+        pw.printf("Main : New State: %s\n", thread.getState());
+        pw.printf("Main : ************************************\n");
+    }
+
     @SuppressWarnings("empty-statement")
     public static void main(String[] a) throws IOException {
         Thread[] threads = new Thread[10];
+        State[] status = new State[10];
+
         for (int i = 0; i < 10; i++) {
             threads[i] = new Thread(new Calculator(i));
             if (i % 2 == 0) {
@@ -48,6 +59,7 @@ public class Calculator implements Runnable {
 
         for (int i = 0; i < 10; i++) {
             printWriter.println(String.format("Main :Status of thread %d is  %s ", i, threads[i].getState()));
+            status[i] = threads[i].getState();
         }
 
         for (int i = 0; i < 10; i++) {
